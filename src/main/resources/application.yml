@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: ops-demo-order-service
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+          - health
+          - info
+          - prometheus
+  info:
+    git:
+      mode: full
