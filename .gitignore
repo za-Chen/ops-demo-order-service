@@ -1,9 +1,18 @@
-# Maven 构建产物
-target/
-
-# IntelliJ IDEA
+### IntelliJ IDEA ###
 .idea/
 *.iml
+*.iws
+*.ipr
 
-# 日志
+### Maven ###
+target/
+
+### Runtime logs ###
+logs/
 *.log
+*.log.*
+
+### Local environment and secrets ###
+.env
+.env.*
+!.env.example

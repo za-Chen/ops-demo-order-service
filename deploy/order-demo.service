@@ -1,0 +1,36 @@
+[Unit]
+Description=Ops Demo Order Service
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+
+User=orderdemo
+Group=opslogs
+WorkingDirectory=/opt/order-demo/app
+UMask=0027
+
+Environment=APP_ENV=demo
+Environment=SERVER_ADDRESS=0.0.0.0
+Environment=SERVER_PORT=8080
+Environment=MANAGEMENT_ADDRESS=0.0.0.0
+Environment=MANAGEMENT_PORT=9091
+Environment=ORDER_LOG_FILE=/opt/order-demo/logs/order-demo.log
+
+ExecStart=/usr/bin/java -jar /opt/order-demo/app/order-demo.jar
+
+SuccessExitStatus=143
+Restart=on-failure
+RestartSec=5
+TimeoutStopSec=30
+
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=order-demo
+
+NoNewPrivileges=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target
