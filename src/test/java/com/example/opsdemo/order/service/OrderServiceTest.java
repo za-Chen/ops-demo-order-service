@@ -5,6 +5,8 @@ import com.example.opsdemo.order.model.OrderPreviewResponse;
 import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
 
@@ -42,8 +44,14 @@ class OrderServiceTest {
     }
 
     @Test
-    void shouldReproduceIntentionalNullPointerFailure() {
-        assertThrows(NullPointerException.class, () -> orderService.previewOrder(999L, 1));
+    void shouldReportMissingProduct() {
+        ResponseStatusException exception = assertThrows(
+                ResponseStatusException.class,
+                () -> orderService.previewOrder(999L, 1)
+        );
+
+        assertEquals(HttpStatus.NOT_FOUND, exception.getStatusCode());
+        assertEquals("Product not found: 999", exception.getReason());
 
         assertEquals(
                 1.0,

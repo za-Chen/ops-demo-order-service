@@ -8,7 +8,9 @@ import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Timer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -48,12 +50,13 @@ public class OrderService {
 
         try {
             Product product = productClient.findById(productId);
+            if (product == null) {
+                throw new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Product not found: " + productId
+                );
+            }
 
-            /*
-             * 【演示用故障，请暂时不要修复】
-             * productId=999 时 FakeProductClient 会返回 null。
-             * 这里缺少空值检查，下一行会稳定触发 NullPointerException。
-             */
             String productName = product.getName();
 
             BigDecimal unitPrice = product.getPrice().setScale(2, RoundingMode.HALF_UP);
