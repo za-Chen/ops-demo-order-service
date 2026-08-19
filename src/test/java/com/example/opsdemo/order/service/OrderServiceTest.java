@@ -42,8 +42,13 @@ class OrderServiceTest {
     }
 
     @Test
-    void shouldReproduceIntentionalNullPointerFailure() {
-        assertThrows(NullPointerException.class, () -> orderService.previewOrder(999L, 1));
+    void shouldRejectEmptyProductResponse() {
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> orderService.previewOrder(999L, 1)
+        );
+
+        assertEquals("Product not found, productId=999", exception.getMessage());
 
         assertEquals(
                 1.0,
