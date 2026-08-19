@@ -49,11 +49,10 @@ public class OrderService {
         try {
             Product product = productClient.findById(productId);
 
-            /*
-             * 【演示用故障，请暂时不要修复】
-             * productId=999 时 FakeProductClient 会返回 null。
-             * 这里缺少空值检查，下一行会稳定触发 NullPointerException。
-             */
+            if (product == null) {
+                throw new IllegalArgumentException("Product not found, productId=" + productId);
+            }
+
             String productName = product.getName();
 
             BigDecimal unitPrice = product.getPrice().setScale(2, RoundingMode.HALF_UP);
